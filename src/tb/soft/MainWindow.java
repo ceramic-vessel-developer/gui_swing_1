@@ -4,7 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
 
 public class MainWindow implements ActionListener {
     private JFrame mainFrame;
@@ -13,12 +12,17 @@ public class MainWindow implements ActionListener {
     private JPanel buttonPanel;
     private JPanel textPanel;
     private String ZALOGUJ = "zaloguj";
+    private String REJESTRACJA = "rejestracja";
     private String ZAREJESTRUJ = "zarejestruj";
+    private String LOGOWANIE = "logowanie";
+    private JButton login;
+    private JButton register;
 
     public MainWindow(){
         this.initialize();
-        this.switchToLogInPage();
+
     }
+
     private void initialize(){
         mainFrame = new JFrame();
         username = new JTextField(10);
@@ -28,8 +32,6 @@ public class MainWindow implements ActionListener {
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setVisible(true);
-    }
-    private void switchToLogInPage(){
         mainFrame.setTitle("Logowanie");
 
 
@@ -39,24 +41,19 @@ public class MainWindow implements ActionListener {
         textPanel.setBackground(Color.white);
         GridBagConstraints c = new GridBagConstraints();
 
-        username.setActionCommand(ZALOGUJ);
-        username.addActionListener(this);
+
 
         JLabel labelUsername = new JLabel("Nazwa użytkownika:");
         labelUsername.setLabelFor(username);
 
-        password.setActionCommand(ZALOGUJ);
-        password.addActionListener(this);
+
 
         JLabel labelPassword = new JLabel("Hasło:");
         labelPassword.setLabelFor(password);
-
-        JButton login =new JButton("Zaloguj");
-        login.setActionCommand(ZALOGUJ);
+        login =new JButton("Zaloguj");
         login.addActionListener(this);
 
-        JButton register = new JButton("Zarejestruj");
-        register.setActionCommand(ZAREJESTRUJ);
+        register = new JButton("Zarejestruj");
         register.addActionListener(this);
 
         textPanel.add(labelUsername,c);
@@ -70,6 +67,29 @@ public class MainWindow implements ActionListener {
         mainFrame.add(textPanel,BorderLayout.CENTER);
         mainFrame.add(buttonPanel, BorderLayout.SOUTH);
         mainFrame.pack();
+        switchToLoginPage();
+
+
+    }
+
+    private void switchToLoginPage(){
+        buttonPanel.setBackground(Color.white);
+        textPanel.setBackground(Color.white);
+        register.setActionCommand(REJESTRACJA);
+        login.setActionCommand(ZALOGUJ);
+        register.setText("Rejestracja");
+        login.setText("Zaloguj");
+    }
+
+    private void switchToRegisterPage(){
+        register.setText("Zarejestruj");
+        login.setText("Logowanie");
+        buttonPanel.setBackground(Color.white);
+        textPanel.setBackground(Color.white);
+        register.setActionCommand(ZAREJESTRUJ);
+
+        login.setActionCommand(LOGOWANIE);
+
 
 
     }
@@ -82,10 +102,22 @@ public class MainWindow implements ActionListener {
             if (success){
                 buttonPanel.setBackground(Color.green);
                 textPanel.setBackground(Color.green);
+                username.setText(null);
+                password.setText(null);
             }else{
                 buttonPanel.setBackground(Color.red);
                 textPanel.setBackground(Color.red);
+                username.setText(null);
+                password.setText(null);
             }
+        }else if (REJESTRACJA.equals(cmd)){
+            switchToRegisterPage();
+        }else if (ZAREJESTRUJ.equals(cmd)){
+            Database.addUser(username.getText(), password.getPassword());
+            username.setText(null);
+            password.setText(null);
+        }else if (LOGOWANIE.equals(cmd)){
+            switchToLoginPage();
         }
     }
 }

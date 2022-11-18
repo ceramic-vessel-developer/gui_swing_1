@@ -10,8 +10,6 @@ public class Database {
 
     static void addUser(String username, char[] password){
         users.put(username,password);
-        char[]a=users.get(username);
-        System.out.println(a);
     }
 
     static boolean logIn(String username, char[] password){
